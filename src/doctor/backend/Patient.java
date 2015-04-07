@@ -1,7 +1,6 @@
 package doctor.backend;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * This class represents a patient with identificable information, including
@@ -20,18 +19,7 @@ public class Patient
 	private String pState;
 	private String pZipCode;
 	private String pMedicalNumber;
-	
-	private final SimpleDateFormat mySQLDateForm = new SimpleDateFormat("yyyy-mm-dd");
 
-	/**
-	 * Creates an "empty" patient.
-	 */
-	public Patient()
-	{
-		this("", "", new Date(), "", "", "", "", "", "");
-	}
-
-	
 	/**
 	 * Creates a Patient object with all identifiable information.
 	 * @param fname First name of the patient.
@@ -154,17 +142,17 @@ public class Patient
 		return this.pMedicalNumber;
 	}
 	
-	public String toSQLString()
+	public String toSQLInsertString()
 	{
-		return "(\'" + pFirstName                 + "\', " +  
-				"\'" + pLastName                  + "\', " +
-				"\'" + mySQLDateForm.format(pDOB) + "\', " +
-				"\'" + pPhone                     + "\', " +
-				"\'" + pAddress                   + "\', " +
-				"\'" + pCity                      + "\', " +
-				"\'" + pState                     + "\', " +
-				"\'" + pZipCode                   + "\', " +
-				"\'" + pMedicalNumber             + "\') ";
+		return "(\'" + pFirstName      + "\', " +  
+				"\'" + pLastName       + "\', " +
+				"\'" + pDOB.toString() + "\', " +
+				"\'" + pPhone          + "\', " +
+				"\'" + pAddress        + "\', " +
+				"\'" + pCity           + "\', " +
+				"\'" + pState          + "\', " +
+				"\'" + pZipCode        + "\', " +
+				"\'" + pMedicalNumber  + "\') ";
 	}
 
 }
