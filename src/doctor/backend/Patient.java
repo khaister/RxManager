@@ -1,7 +1,7 @@
 package doctor.backend;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ArrayList;
 
 /**
  * This class represents a patient with identificable information, including
@@ -20,6 +20,8 @@ public class Patient
 	private String pState;
 	private String pZipCode;
 	private String pMedicalNumber;
+	
+	private final SimpleDateFormat mySQLDateForm = new SimpleDateFormat("yyyy-mm-dd");
 
 	/**
 	 * Creates an "empty" patient.
@@ -108,20 +110,6 @@ public class Patient
 		this.pMedicalNumber = medical_number;
 	}
 	
-	public void setDocFirstName(String docfname)
-	{
-		this.docFirstName = docfname;
-	}
-	
-	public void setDocLastName(String doclname)
-	{
-		this.docLastName = doclname;
-	}
-	
-	public void setDocLicense(String license)
-	{
-		this.docLicense = license;
-	}
 
 	////////////////////////////////////////////////////////////////////////////
 	//
@@ -132,6 +120,7 @@ public class Patient
 	{
 		return this.pFirstName;
 	}
+	
 	public String getLastName()
 	{
 		return this.pLastName;
@@ -164,18 +153,18 @@ public class Patient
 	{
 		return this.pMedicalNumber;
 	}
-	public String getDocFirtName()
-	{
-		return this.docFirstName;
-	}
-	public String getDocLastName()
-	{
-		return this.docLastName;
-	}
-	public String getDocLicense()
-	{
-		return this.docLicense;
-	}
 	
+	public String toSQLString()
+	{
+		return "(\'" + pFirstName                 + "\', " +  
+				"\'" + pLastName                  + "\', " +
+				"\'" + mySQLDateForm.format(pDOB) + "\', " +
+				"\'" + pPhone                     + "\', " +
+				"\'" + pAddress                   + "\', " +
+				"\'" + pCity                      + "\', " +
+				"\'" + pState                     + "\', " +
+				"\'" + pZipCode                   + "\', " +
+				"\'" + pMedicalNumber             + "\') ";
+	}
 
 }
