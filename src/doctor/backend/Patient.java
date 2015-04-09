@@ -98,6 +98,7 @@ public class Patient extends User
 	{
 		return this.phone;
 	}
+	
 	public String getAddress()
 	{
 		return this.address;

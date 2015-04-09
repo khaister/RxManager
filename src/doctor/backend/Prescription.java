@@ -209,4 +209,21 @@ public class Prescription
     	return this.patientMedNumber;
     }
     
+    public String toSQLInsertString()
+	{
+		return "(\'" + this.name      + "\', " +  
+				"\'" + this.strength       + "\', " +
+				"\'" + this.route + "\', " +
+				"\'" + this.frequency          + "\', " +
+				"\'" + this.quantity        + "\', " +
+				"\'" + this.maxRefill           + "\', " +
+				"\'" + this.refills          + "\', " +
+				"\'" + this.note        + "\', " +
+				"\'" + this.date.toString()        + "\', " +
+				"\'" + this.isFilled        + "\', " +
+				"\'" + this.pharmID        + "\', " +
+				"\'" + this.docLicense        + "\', " +
+				"\'" + this.patientMedNumber  + "\') ";
+	}
+    
 }
