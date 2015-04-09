@@ -58,7 +58,7 @@ CREATE TABLE Prescriptions
 	RxDate DATE NOT NULL, # the date the prescription is written
 	RxNote VARCHAR(200), # additional note the doctor may have
 	RxIfFilled BOOLEAN NOT NULL, # true: when Rx is filled, false otherwise
-	RXPharmacyID VARCHAR(45) NOT NULL,
+	RxPharmacyID VARCHAR(45) NOT NULL,
 	RxPatientFName VARCHAR(45) NOT NULL,
 	RxPatientLName VARCHAR(45) NOT NULL,
 	RxPatientDOB DATE NOT NULL,
