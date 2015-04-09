@@ -1,0 +1,7 @@
+# No need to have executables
+/bin/
+
+# These are machine- or project-dependent, thus would cause problem if included in repo
+.classpath
+.project
+.settings
