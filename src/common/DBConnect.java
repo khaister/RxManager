@@ -149,12 +149,14 @@ public class DBConnect
 	}
 	
 	/**
+	 * Updates a patient record. Note: all old info will be overwritten with
+	 * that from the new Patient object.
 	 * 
-	 * @param oldRecord
-	 * @param newRecord
+	 * @param oldRecord Old record of the patient.
+	 * @param newRecord New record of the patient.
 	 * @return
 	 */
-	public int modifyPatientRecord(Patient oldRecord, Patient newRecord)
+	public int updatePatientRecord(Patient oldRecord, Patient newRecord)
 	{
 		int errorCode = 0;
 		
@@ -193,9 +195,10 @@ public class DBConnect
 	}
 	
 	/**
+	 * Creates a new Prescription record (row) in the database.
 	 * 
-	 * @param rx
-	 * @return
+	 * @param rx Prescription to be added to the database.
+	 * @return 0 if the INSERT is sucessful, 1 otherwise.
 	 */
 	public int sendPrescription(Prescription rx)
 	{
