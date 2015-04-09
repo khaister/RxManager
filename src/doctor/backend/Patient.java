@@ -19,6 +19,14 @@ public class Patient
 	private String pState;
 	private String pZipCode;
 	private String pMedicalNumber;
+	
+	/**
+	 * Creates an "empty" patient.
+	 */
+	public Patient()
+	{
+		this("", "", null, "", "", "", "", "", "");
+	}
 
 	/**
 	 * Creates a Patient object with all identifiable information.
