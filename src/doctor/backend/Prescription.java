@@ -4,19 +4,19 @@ import java.sql.Date;
 
 public class Prescription
 {
-	private String RxName;
-	private String RxStrength;
-	private String RxRoute;
-	private String RxFrequency;
-	private String RxQuantity;
-	private int RxMaxRefill;
-	private int RxRefills;
-	private String RxNote;
-	private Date RxDate;
-	private boolean RxIsFilled;
-	private String RxPharmacyID;
-	private String RxDocLicense;
-	private String RxPatientMedNumber;
+	private String name;
+	private String strength;
+	private String route;
+	private String frequency;
+	private String quantity;
+	private int maxRefill;
+	private int refills;
+	private String note;
+	private Date date;
+	private boolean isFilled;
+	private String pharmID;
+	private String docLicense;
+	private String patientMedNumber;
 	
 	
 	/**
@@ -40,28 +40,28 @@ public class Prescription
 	 * @param note Doctor or pharmacist's note.
 	 * @param date Date the prescription is written.
 	 * @param filled True of the Rx has been filled, false otherwise.
-	 * @param pharmacyID Branch ID of the intended pharmacy.
+	 * @param pharmID Branch ID of the intended pharmacy.
 	 * @param docLicense License of the prescribing doctor.
 	 * @param patientMedNumber Patient's medical number.
 	 */
     public Prescription(String name, String strength, String route,
     		String frequency, String quantity, int maxRefills, int refills,
-    		String note, Date date, boolean filled, String pharmacyID,
+    		String note, Date date, boolean filled, String pharmID,
     		String docLicense, String patientMedNumber)
     {
-    	this.RxName = name;
-    	this.RxStrength = strength;
-    	this.RxRoute = route;
-    	this.RxFrequency = frequency;
-    	this.RxQuantity = quantity;
-    	this.RxMaxRefill = maxRefills;
-    	this.RxRefills = refills;
-    	this.RxNote = note;
-    	this.RxDate = date;
-    	this.RxIsFilled = filled;
-    	this.RxPharmacyID = pharmacyID;
-    	this.RxDocLicense = docLicense;
-    	this.RxPatientMedNumber = patientMedNumber;
+    	this.name = name;
+    	this.strength = strength;
+    	this.route = route;
+    	this.frequency = frequency;
+    	this.quantity = quantity;
+    	this.maxRefill = maxRefills;
+    	this.refills = refills;
+    	this.note = note;
+    	this.date = date;
+    	this.isFilled = filled;
+    	this.pharmID = pharmID;
+    	this.docLicense = docLicense;
+    	this.patientMedNumber = patientMedNumber;
     }
     
 	////////////////////////////////////////////////////////////////////////////
@@ -71,67 +71,67 @@ public class Prescription
 	////////////////////////////////////////////////////////////////////////////
     public void setRxName(String name)
     {
-    	this.RxName = name;
+    	this.name = name;
     }
     
     public void setRxStrength(String strength)
     {
-    	this.RxStrength = strength;
+    	this.strength = strength;
     }
     
     public void setRxRoute(String route)
     {
-    	this.RxRoute = route;
+    	this.route = route;
     }
     
     public void setRxFrequency(String frequency)
     {
-    	this.RxFrequency = frequency;
+    	this.frequency = frequency;
     }
     
     public void setRxQuantity(String quantity)
     {
-    	this.RxQuantity = quantity;
+    	this.quantity = quantity;
     }
     
     public void setRxMaxRefill(int maxRefill)
     {
-    	this.RxMaxRefill = maxRefill;
+    	this.maxRefill = maxRefill;
     }
     
     public void setRefills(int refills)
     {
-    	this.RxRefills = refills;
+    	this.refills = refills;
     }
     
     public void setRxNote(String note)
     {
-    	this.RxNote = note;
+    	this.note = note;
     }
     
     public void setRxDate(Date date)
     {
-    	this.RxDate = date;
+    	this.date = date;
     }
     
     public void setRxIsFilled(boolean filled)
     {
-    	this.RxIsFilled = filled;
+    	this.isFilled = filled;
     }
     
-    public void setRxPharmacyID(String pharmacyID)
+    public void setRxPharmacyID(String pharmID)
     {
-    	this.RxPharmacyID = pharmacyID;
+    	this.pharmID = pharmID;
     }
     
     public void setRxDocLicense(String docLicense)
     {
-    	this.RxDocLicense = docLicense;
+    	this.docLicense = docLicense;
     }
     
     public void setPatientMedNumber(String patientMedNumber)
     {
-    	this.RxPatientMedNumber = patientMedNumber;
+    	this.patientMedNumber = patientMedNumber;
     }
     
 	////////////////////////////////////////////////////////////////////////////
@@ -141,67 +141,67 @@ public class Prescription
 	////////////////////////////////////////////////////////////////////////////
     public String getRxName()
     {
-    	return this.RxName;
+    	return this.name;
     }
     
     public String getRxStrength()
     {
-    	return this.RxStrength;
+    	return this.strength;
     }
     
     public String getRxRoute()
     {
-    	return this.RxRoute;
+    	return this.route;
     }
     
     public String getRxFrequency()
     {
-    	return this.RxFrequency;
+    	return this.frequency;
     }
     
     public String getRxQuantity()
     {
-    	return this.RxQuantity;
+    	return this.quantity;
     }
     
     public int getRxMaxRefill()
     {
-    	return this.RxMaxRefill;
+    	return this.maxRefill;
     }
     
     public int getRefills()
     {
-    	return this.RxRefills;
+    	return this.refills;
     }
     
     public String getRxNote()
     {
-    	return this.RxNote;
+    	return this.note;
     }
     
     public Date getRxDate()
     {
-    	return this.RxDate;
+    	return this.date;
     }
     
     public boolean IsFilled()
     {
-    	return this.RxIsFilled;
+    	return this.isFilled;
     }
     
-    public String getRxPharmacyID()
+    public String getPharmID()
     {
-    	return this.RxPharmacyID;
+    	return this.pharmID;
     }
     
-    public String getRxDocLicense()
+    public String getDocLicense()
     {
-    	return this.RxDocLicense;
+    	return this.docLicense;
     }
     
     public String getPatientMedNumber()
     {
-    	return this.RxPatientMedNumber;
+    	return this.patientMedNumber;
     }
     
 }

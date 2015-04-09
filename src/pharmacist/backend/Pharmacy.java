@@ -1,4 +1,4 @@
-package doctor.backend;
+package pharmacist.backend;
 
 public class Pharmacy
 {
