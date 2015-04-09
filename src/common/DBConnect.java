@@ -219,7 +219,64 @@ public class DBConnect
 		}
 		
 		return errorCode;
+	}
+	
+	/**
+	 * Checsk whether the credential entered by user is correct or not.
+	 *  
+	 * @param username
+	 * @param password
+	 * @return true if the credential matches that in the database, false otherwise.
+	 */
+	public boolean userAuthentication(String username, String password)
+	{
+		boolean isCorrectID = false;
+		String sql = "SELECT dPassword FROM Doctors WHERE dUsername = " + username;
 		
+		try
+		{
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			rs.first(); // go to the first row in the result set (should only have one row)
+			if (rs.getString("dPassword") == password)
+				isCorrectID = true;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return isCorrectID;
+	}
+	
+	/**
+	 * Obtains the doctor's record from the database.
+	 * @param username Username of the doctor.
+	 * @return The Doctor object that matches the username.
+	 */
+	public Doctor getDoctorRecord(String username)
+	{
+		String sql = "SELECT * FROM Doctors WHERE dUsername = " + username;
+		Doctor foundDoc = null;
+		
+		try
+		{
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			rs.first();
+			foundDoc = new Doctor(rs.getString("dFirstName"), 
+					rs.getString("dLastName"), rs.getDate("dDOB"), 
+					rs.getString("dLicense"), rs.getString("dUserName"),
+					rs.getString("dPassword"));
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return foundDoc;
 	}
 
 }
