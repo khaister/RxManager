@@ -1,4 +1,4 @@
-package doctor.backend;
+package common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -182,6 +182,11 @@ public class PatientConnect
 		}
 
 		return errorCode;
+	}
+	
+	public void sendPrescription(Prescription rx)
+	{
+		
 	}
 
 }
