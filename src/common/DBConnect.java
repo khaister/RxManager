@@ -7,13 +7,15 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import doctor.backend.*;
+import pharmacist.backend.*;
 
 /**
  * 
  * @author khaister
  *
  */
-public class PatientConnect
+public class DBConnect
 {
 	/** The name of the MySQL account to use (or empty for anonymous) */
 	private final String userName = "rxmandoc";
@@ -36,7 +38,7 @@ public class PatientConnect
 	/**
 	 * Creates a PatientConnect instance and connect to the database.
 	 */
-	public PatientConnect()
+	public DBConnect()
 	{
 		// Connect to MySQL
 		try 
@@ -146,6 +148,12 @@ public class PatientConnect
 		return errorCode;
 	}
 	
+	/**
+	 * 
+	 * @param oldRecord
+	 * @param newRecord
+	 * @return
+	 */
 	public int modifyPatientRecord(Patient oldRecord, Patient newRecord)
 	{
 		int errorCode = 0;
@@ -184,8 +192,30 @@ public class PatientConnect
 		return errorCode;
 	}
 	
-	public void sendPrescription(Prescription rx)
+	/**
+	 * 
+	 * @param rx
+	 * @return
+	 */
+	public int sendPrescription(Prescription rx)
 	{
+		int errorCode = 0;
+		
+		String sql = "INSERT INTO Prescriptions VALUES " + rx.toSQLInsertString();
+		
+		try
+		{
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			rs.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			errorCode = 1;
+		}
+		
+		return errorCode;
 		
 	}
 
