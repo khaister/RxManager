@@ -2,6 +2,11 @@ package doctor.backend;
 
 import java.sql.Date;
 
+/**
+ * This class represents a typical prescription.
+ * @author khaister
+ *
+ */
 public class Prescription
 {
 	private String name;

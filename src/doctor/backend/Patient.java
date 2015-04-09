@@ -119,17 +119,22 @@ public class Patient extends User
 		return this.medicalNumber;
 	}
 	
-//	public String toSQLInsertString()
-//	{
-//		return "(\'" + pFirstName      + "\', " +  
-//				"\'" + pLastName       + "\', " +
-//				"\'" + pDOB.toString() + "\', " +
-//				"\'" + pPhone          + "\', " +
-//				"\'" + pAddress        + "\', " +
-//				"\'" + pCity           + "\', " +
-//				"\'" + pState          + "\', " +
-//				"\'" + pZipCode        + "\', " +
-//				"\'" + pMedicalNumber  + "\') ";
-//	}
+	/**
+	 * Creates the values for INSERT statement in SQL.
+	 * @return The string (with parentheses) to place after VALUES in INSERT 
+	 *         statements.
+	 */
+	public String toSQLInsertString()
+	{
+		return "(\'" + super.getFirstName()      + "\', " +  
+				"\'" + super.getLastName()       + "\', " +
+				"\'" + super.getDOB().toString() + "\', " +
+				"\'" + this.phone          + "\', " +
+				"\'" + this.address        + "\', " +
+				"\'" + this.city           + "\', " +
+				"\'" + this.state          + "\', " +
+				"\'" + this.zipCode        + "\', " +
+				"\'" + this.medicalNumber  + "\') ";
+	}
 
 }

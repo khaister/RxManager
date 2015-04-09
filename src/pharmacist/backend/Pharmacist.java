@@ -3,6 +3,12 @@ package pharmacist.backend;
 import java.sql.Date;
 import common.*;
 
+/**
+ * This class represents a typical pharmacist.
+ * 
+ * @author khaister
+ *
+ */
 public class Pharmacist extends User
 {
 	private String pharmBranchID;
