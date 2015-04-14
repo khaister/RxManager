@@ -67,10 +67,6 @@ CREATE TABLE Prescriptions
 	CONSTRAINT rx_pk
 	PRIMARY KEY (RxName, RxDate, RxPatientMedNumber),
 
-	CONSTRAINT rx_doctor_fk
-	FOREIGN KEY (RxDocLicense)
-	REFERENCES Doctors (dLicense),
-
 	CONSTRAINT rx_patient_fk
 	FOREIGN KEY (RxPatientFName, RxPatientLName, RxPatientDOB)
 	REFERENCES Patients (pFirstName, pLastName, pDOB),
