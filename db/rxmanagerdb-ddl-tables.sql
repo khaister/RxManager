@@ -10,7 +10,7 @@ CREATE TABLE Doctors
 	dPassword VARCHAR(20),
 	
 	CONSTRAINT doctor_pk
-	PRIMARY KEY (dFirstName, dLastName, dLicense),
+	PRIMARY KEY (dFirstName, dLastName, dLicense)
 );
 
 CREATE TABLE Patients
@@ -29,7 +29,7 @@ CREATE TABLE Patients
 	docLicense VARCHAR(45),
 
 	CONSTRAINT patients_pk
-	PRIMARY KEY (pFirstName, pLastName, pDOB, pPhone),
+	PRIMARY KEY (pFirstName, pLastName, pDOB, pPhone)
 );
 
 CREATE TABLE Pharmacies
@@ -69,7 +69,7 @@ CREATE TABLE Prescriptions
 
 	CONSTRAINT rx_doctor_fk
 	FOREIGN KEY (RxDocLicense)
-	REFERENCES Doctors (dLicense)
+	REFERENCES Doctors (dLicense),
 
 	CONSTRAINT rx_patient_fk
 	FOREIGN KEY (RxPatientFName, RxPatientLName, RxPatientDOB)
