@@ -6,11 +6,11 @@ CREATE TABLE Doctors
 	dLastName VARCHAR(45) NOT NULL,
 	dLicense VARCHAR(45) NOT NULL,
 	dDOB DATE NOT NULL,
-	dUserName VARCHAR(20),
+	dUsername VARCHAR(20),
 	dPassword VARCHAR(20),
 	
 	CONSTRAINT doctor_pk
-	PRIMARY KEY (dFirstName, dLastName, dLicense)
+	PRIMARY KEY (dLicense)
 );
 
 CREATE TABLE Patients
@@ -24,12 +24,9 @@ CREATE TABLE Patients
 	pState VARCHAR(45) NOT NULL,
 	pZipCode VARCHAR(45) NOT NULL,
 	pMedicalNumber VARCHAR(45) NOT NULL,
-	docFirstName VARCHAR(45),
-	docLastName VARCHAR(45),
-	docLicense VARCHAR(45),
 
 	CONSTRAINT patients_pk
-	PRIMARY KEY (pFirstName, pLastName, pDOB, pPhone)
+	PRIMARY KEY (pMedicalNumber)
 );
 
 CREATE TABLE Pharmacies
@@ -46,36 +43,6 @@ CREATE TABLE Pharmacies
 	PRIMARY KEY (phyBranchID)
 );
 
-CREATE TABLE Prescriptions
-(
-	RxName VARCHAR (45) NOT NULL,
-	RxStrength VARCHAR (45) NOT NULL,
-	RxRoute VARCHAR (45) NOT NULL,
-	RxFrequency VARCHAR(45) NOT NULL,
-	RxQuantity VARCHAR(45) NOT NULL,
-	RxMaxRefill INT NOT NULL, # maximum number of refills
-	RxRefills INT NOT  NULL, # number of refills done
-	RxDate DATE NOT NULL, # the date the prescription is written
-	RxNote VARCHAR(200), # additional note the doctor may have
-	RxIfFilled BOOLEAN NOT NULL, # true: when Rx is filled, false otherwise
-	RxPharmacyID VARCHAR(45) NOT NULL,
-	RxPatientFName VARCHAR(45) NOT NULL,
-	RxPatientLName VARCHAR(45) NOT NULL,
-	RxPatientDOB DATE NOT NULL,
-	RxPatientMedNumber VARCHAR(45) NOT NULL,
-
-	CONSTRAINT rx_pk
-	PRIMARY KEY (RxName, RxDate, RxPatientMedNumber),
-
-	CONSTRAINT rx_patient_fk
-	FOREIGN KEY (RxPatientFName, RxPatientLName, RxPatientDOB)
-	REFERENCES Patients (pFirstName, pLastName, pDOB),
-
-	CONSTRAINT rx_pharm_fk
-	FOREIGN KEY (RXPharmacyID)
-	REFERENCES Pharmacies (phyBranchID)
-);
-
 CREATE TABLE Pharmacists
 (
 	phistFirstName VARCHAR(45) NOT NULL,
@@ -83,7 +50,7 @@ CREATE TABLE Pharmacists
 	phistLicense VARCHAR(45) NOT NULL,
 	phistDOB Date NOT NULL,
 	phistPharmacyBranchID VARCHAR(45) NOT NULL,
-	phistUserName VARCHAR(45),
+	phistUsername VARCHAR(45),
 	phistPassword VARCHAR(45),
 
 	CONSTRAINT pharmacist_pk
@@ -92,4 +59,37 @@ CREATE TABLE Pharmacists
 	CONSTRAINT phist_phy_fk
 	FOREIGN KEY (phistPharmacyBranchID)
 	REFERENCES Pharmacies (phyBranchID)
+);
+
+CREATE TABLE Prescriptions
+(
+	RxName VARCHAR (45) NOT NULL,
+	RxStrength VARCHAR (45) NOT NULL,
+	RxRoute VARCHAR (45) NOT NULL,
+	RxFrequency VARCHAR(45) NOT NULL,
+	RxQuantity VARCHAR(45) NOT NULL,
+	RxMaxRefills INT NOT NULL,
+	RxRefills INT NOT  NULL,
+	RxDatePrescribed DATE NOT NULL,
+	RxDateFilled DATE,
+	RxNotes VARCHAR(200),
+	RxIsFilled BOOLEAN NOT NULL,
+	RxPharmacyID VARCHAR(45) NOT NULL,
+	RxDocLicense VARCHAR(45) NOT NULL,
+	RxPatientMedNumber VARCHAR(45) NOT NULL,
+
+	CONSTRAINT rx_pk
+	PRIMARY KEY (RxName, RxDate, RxPatientMedNumber),
+
+	CONSTRAINT rx_pharm_fk
+	FOREIGN KEY (RxPharmacyID)
+	REFERENCES Pharmacies (phyBranchID),
+
+	CONSTRAINT rx_doc_fk
+	FOREIGN KEY (RxDocLicense)
+	REFERENCES Doctors (dLicense),
+
+	CONSTRAINT rx_patient_fk
+	FOREIGN KEY (RxPatientMedNumber)
+	REFERENCES Patients (pMedicalNumber)
 );
