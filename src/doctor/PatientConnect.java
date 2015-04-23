@@ -5,35 +5,38 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.*;
 
 import common.*;
-import doctor.backend.*;
-
 
 /**
- * A GUI that allows either (1) creating a new patient record, or (2) looking 
- * up a returning patient. This window will load if Login instance closes after
+ * A GUI that allows either (1) creating a new patient record (i.e. instantiate 
+ * a AddNewPatient, or (2) looking up a returning patient (i.e. instantiate a 
+ * ReturningPatientSearch). This window will load if Login instance closes after
  * a successful login.
  */
+@SuppressWarnings("unused")
 public class PatientConnect extends Window
 {
 	private Shell shell;
-	private Doctor doctor;
 
+	// FOR TESTING PURPOSES
+	public static void main(String[] args)
+	{
+		PatientConnect patientConnect = new PatientConnect(new Shell(new Display()));
+	}
 	
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public PatientConnect(Shell parent, Doctor doctor) 
+	public PatientConnect(Shell parent) 
 	{
-		this.doctor = doctor;
 		shell = new Shell(parent, SWT.CLOSE | SWT.BORDER | SWT.TITLE);
 		parent.setVisible(false);
 		
-		shell.setSize(450, 300);
+		shell.setBounds(parent.getBounds().x, parent.getBounds().y, 450, 300);
 		
 		// BUTTON: Create new patient
 		Button btnNewPatient = new Button(shell, SWT.CENTER);
-		btnNewPatient.setBounds(10, 52, 412, 56);
+		btnNewPatient.setBounds(10, 145, 430, 56);
 		btnNewPatient.setText("New Patient");
 		btnNewPatient.addSelectionListener(new SelectionAdapter()
 		{
@@ -45,7 +48,7 @@ public class PatientConnect extends Window
 		
 		// BUTTON: Returning patient search
 		Button btnReturningPatient = new Button(shell, SWT.NONE);
-		btnReturningPatient.setBounds(10, 136, 412, 56);
+		btnReturningPatient.setBounds(10, 61, 430, 56);
 		btnReturningPatient.setText("Returning Patient");
 		btnReturningPatient.addSelectionListener(new SelectionAdapter()
 		{
@@ -61,7 +64,7 @@ public class PatientConnect extends Window
 		{
 			if (!display.readAndDispatch())
 				display.sleep();
-		}		
+		}
 	}
 	
 	
@@ -71,8 +74,7 @@ public class PatientConnect extends Window
 	 */
 	public void showAddNewPatient(Shell parent)
 	{
-		@SuppressWarnings("unused")
-		AddNewPatient addNewPatient = new AddNewPatient(parent, doctor);
+		AddNewPatient addNewPatient = new AddNewPatient(parent);
 	}
 	
 	
@@ -82,8 +84,7 @@ public class PatientConnect extends Window
 	 */
 	public void showReturningPatientSearch(Shell parent)
 	{
-		@SuppressWarnings("unused")
 		ReturningPatientSearch returningPatientSearch 
-			= new ReturningPatientSearch(parent, doctor);
+			= new ReturningPatientSearch(parent);
 	}
 }

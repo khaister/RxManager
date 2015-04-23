@@ -9,10 +9,18 @@ import java.sql.*;
 import common.*;
 import doctor.backend.*;
 
+// TODO: Add confirmation for buttons
+// TODO: Add checkpoint that the patient being added is not in the database yet
+
 /**
- * Shell to add a new patient to the database.
+ * This class represents a window that allows user to enter information for a 
+ * new patient whose record is not in the database yet. After the information is
+ * entered, user is presented with PatientInfo, which shows the newly-saved 
+ * patient record.
+ * 
  * @author Khai Nguyen
  */
+@SuppressWarnings("unused")
 public class AddNewPatient extends Window
 {
 	private Shell shell;
@@ -25,21 +33,25 @@ public class AddNewPatient extends Window
 	private Text txtState;
 	private Text txtZipCode;
 	private Text txtMedicalNumber;
-
-	private Doctor doctor;
+	
+	// FOR TESTING PURPOSES
+	public static void main(String[] args)
+	{
+		AddNewPatient addNewPatient = new AddNewPatient(new Shell(new Display()));
+	}
+	
 	
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public AddNewPatient(Shell parent, Doctor doctor) 
+	public AddNewPatient(Shell parent) 
 	{
-		this.doctor = doctor;
 		shell = new Shell(parent, SWT.CLOSE | SWT.BORDER | SWT.TITLE);
 		parent.setVisible(false);
 		
 		shell.setText("Add New Patient");
-		shell.setSize(428, 302);
+		shell.setBounds(parent.getBounds().x, parent.getBounds().y, 428, 302);
 		
 		// TEXT: First name
 		Label lblFirstName = new Label(shell, SWT.NONE);
@@ -61,7 +73,7 @@ public class AddNewPatient extends Window
 		lblDOB.setBounds(10, 55, 210, 21);
 		lblDOB.setText("Date of birth");
 		dtDOB = new DateTime(shell, SWT.BORDER);
-		dtDOB.setBounds(10, 70, 210, 21);
+		dtDOB.setBounds(10, 70, 210, 25);
 		
 		// TEXT: Address (Street name & number)
 		Label lblAddress = new Label(shell, SWT.NONE);
@@ -75,21 +87,21 @@ public class AddNewPatient extends Window
 		lblCity.setBounds(10, 145, 25, 15);
 		lblCity.setText("City");
 		txtCity = new Text(shell, SWT.BORDER);
-		txtCity.setBounds(40, 142, 168, 21);
+		txtCity.setBounds(10, 166, 191, 21);
 		
 		// TEXT: State
 		Label lblState = new Label(shell, SWT.NONE);
-		lblState.setBounds(222, 145, 32, 21);
+		lblState.setBounds(207, 145, 32, 15);
 		lblState.setText("State");
 		txtState = new Text(shell, SWT.BORDER);
-		txtState.setBounds(260, 142, 32, 21);
+		txtState.setBounds(207, 166, 47, 21);
 		
 		// TEXT: Zip code
 		Label lblZipCode = new Label(shell, SWT.NONE);
-		lblZipCode.setBounds(307, 145, 25, 15);
+		lblZipCode.setBounds(260, 145, 25, 15);
 		lblZipCode.setText("Zip");
 		txtZipCode = new Text(shell, SWT.BORDER);
-		txtZipCode.setBounds(334, 142, 80, 21);
+		txtZipCode.setBounds(260, 166, 154, 21);
 
 		// TEXT: Phone
 		Label lblPhoneNumber = new Label(shell, SWT.NONE);
@@ -100,10 +112,10 @@ public class AddNewPatient extends Window
 
 		// TEXT: Medical number
 		Label lblMedicalNumber = new Label(shell, SWT.NONE);
-		lblMedicalNumber.setBounds(10, 181, 80, 21);
+		lblMedicalNumber.setBounds(10, 206, 80, 15);
 		lblMedicalNumber.setText("Medical ID");
 		txtMedicalNumber = new Text(shell, SWT.BORDER);
-		txtMedicalNumber.setBounds(10, 198, 404, 21);
+		txtMedicalNumber.setBounds(10, 220, 404, 21);
 
 				
 		////////////////////////////////////////////////////////////////////////
@@ -152,6 +164,13 @@ public class AddNewPatient extends Window
 				showPatientInfo(shell, patient);
 			}
 		});
+
+		// Tab order
+		Control[] tabOrder = new Control[]
+			{txtFirstName, txtLastName, dtDOB, txtPhone, txtAddress,
+			 txtCity, txtState, txtZipCode, txtMedicalNumber, btnCancel, 
+			 btnSave};
+		shell.setTabList(tabOrder);
 		
 		// Actually open the shell
 		shell.open();
@@ -184,9 +203,14 @@ public class AddNewPatient extends Window
 	}
 
 	
+	/**
+	 * Opens PatientInfo to view information of the patient, including Rx.
+	 * 
+	 * @param parent The parent shell.
+	 * @param patient The patient whose information to be viewed.
+	 */
 	public void showPatientInfo(Shell parent, Patient patient)
 	{
-		PatientInfo patientInfo = new PatientInfo(parent, doctor, patient);
-		patientInfo.open();
+		PatientInfo patientInfo = new PatientInfo(parent, patient);
 	}
 }

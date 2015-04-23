@@ -2,6 +2,11 @@ package common;
 
 import org.eclipse.swt.widgets.*;
 
+/**
+ * This class is inherited by all other classes that intantiates a Shell.
+ * @author khaister
+ */
+@SuppressWarnings("unused")
 public class Window
 {
 	private Shell shell;

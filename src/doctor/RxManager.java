@@ -1,21 +1,26 @@
 package doctor;
 
-import java.sql.*;
-import java.util.Properties;
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.*; 
+
+import java.sql.*;
+import java.util.Properties;
 
 import common.*;
 import doctor.backend.*;
 import static java.lang.System.out;
 
 /**
- * Class of the main program.
+ * When the application starts, an instance of this class is created first. It
+ * provides a login window for user to enter their credential (username and
+ * password). Upon successful authentication, the instance calls a 
+ * PatientConnect object.
+ * 
+ * 
  * @author Khai Nguyen
- *
  */
+@SuppressWarnings("unused")
 public class RxManager extends Window
 {
 	// SQL Log in
@@ -27,13 +32,13 @@ public class RxManager extends Window
 	public static Connection dbconnect;
 
 	// other fields
-	private Doctor doctor;
+	public static Doctor doctor;
 		
 	// GUI fields
 	private Text txtUsername;
 	private Text txtPassword;
 	
-	
+	// TODO: Log out option
 	/*--------------------MAIN: STARTING POINT OF THE APPLICATION-------------*/
 	/**
 	 * @param args Command line arguments.
@@ -112,6 +117,7 @@ public class RxManager extends Window
 		
 		// BUTTON: Sign in
 		Button btnSignIn = new Button(shell, SWT.NONE);
+		btnSignIn.setGrayed(true);
 		btnSignIn.setBounds(128, 210, 176, 26);
 		btnSignIn.setText("Sign in");
 		btnSignIn.addSelectionListener(new SelectionAdapter()
@@ -136,6 +142,10 @@ public class RxManager extends Window
 				}
 			}
 		});
+		
+		// Set tab order
+		Control[] tabOrder = new Control[] {txtUsername, txtPassword, btnSignIn};
+		shell.setTabList(tabOrder);
 		
 		shell.open();
 		return shell;
@@ -182,7 +192,7 @@ public class RxManager extends Window
 	 * @param username Username of the doctor.
 	 * @return The Doctor object that matches the username.
 	 */
-	public Doctor getDoctorRecord(String username)
+	public static Doctor getDoctorRecord(String username)
 	{
 		String sql = "SELECT * FROM Doctors WHERE dUsername = '" + username + "'";
 		Doctor foundDoc = null;
@@ -214,6 +224,6 @@ public class RxManager extends Window
 	 */
 	public void showPatientConnect(Shell parent)
 	{
-		PatientConnect patientConnect = new PatientConnect(parent, doctor);
+		PatientConnect patientConnect = new PatientConnect(parent);
 	}
 }

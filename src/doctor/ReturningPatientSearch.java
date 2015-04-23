@@ -1,54 +1,196 @@
 package doctor;
 
-import java.util.ArrayList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.*;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Text;
-//import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.custom.StyledText;
-import doctor.backend.*;
-import java.sql.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
 
-public class ReturningPatientSearch
+import java.util.*;
+import java.sql.*;
+import java.util.regex.*;
+
+import common.*;
+import doctor.backend.*;
+
+// TODO: One field for searching by name (need to have regex)
+
+/**
+ * Displays a list of patients found by typing information into the appropriate
+ * search box. The selected patient is then viewed in an instance of PatientInfo.
+ * 
+ * @author Khai Nguyen
+ */
+@SuppressWarnings("unused")
+public class ReturningPatientSearch extends Window
 {
-	private ArrayList<Patient> result;
-	private Patient searchPatient = new Patient();
-	private static Connection dbconnect;
-	private Doctor doctor;
+	private ArrayList<Patient> foundPatients;
+	private Patient queryPatient;
 	
 	Shell shell;
 	private Text txtFirstName;
 	private Text txtLastName;
 	private Text txtMedicalNumber;
+	private Table table;
 	
+	Pattern nameSplitter = Pattern.compile("\\w+\\s+\\w+"); // \w+\s+\w+
 	
-	/**
-	 * 
-	 * @param parent
-	 * @param conn
-	 */
-	public ReturningPatientSearch(Shell parent, Doctor doctor) 
+	// TESTING PURPOSES
+	public static void main(String[] args)
 	{
-		this.doctor = doctor;
-		shell = new Shell(parent, SWT.SHELL_TRIM);
-		dbconnect = RxManager.dbconnect;
+		ReturningPatientSearch returnPatientSearch 
+			= new ReturningPatientSearch(new Shell(new Display()));
 	}
 	
-	public void open()
+	public ReturningPatientSearch(Shell parent) 
 	{
+		queryPatient = new Patient();
+		
+		shell = new Shell(parent, SWT.SHELL_TRIM);
+		parent.setVisible(false);
+		
+		shell.setSize(450, 385);
+		shell.setText("Returning Patient Search");
+				
+		// TEXT: Search boxes
+		Label lblName = new Label(shell, SWT.NONE);
+		lblName.setBounds(10, 38, 43, 20);
+		lblName.setText("Name");
+		
+		txtFirstName = new Text(shell, SWT.BORDER);
+		txtFirstName.setToolTipText("First name");
+		txtFirstName.setBounds(104, 35, 169, 21);
+		txtFirstName.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				queryPatient = new Patient();
+				queryPatient.setFirstName(txtFirstName.getText());
+				foundPatients = getPatients(queryPatient);
+				table.clearAll();
+				table.setItemCount(0);
+				for (Patient patient : foundPatients)
+					// TODO: Use Table and a different toString method
+				{
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setData(patient);
+					item.setText(new String[] {patient.getFirstName(), 
+							patient.getLastName(), patient.getDOB().toString(), 
+							patient.getPhone()});
+				}
+			}
+		});
+		
+		txtLastName = new Text(shell, SWT.BORDER);
+		txtLastName.setToolTipText("Last name");
+		txtLastName.setBounds(279, 35, 161, 21);
+		txtLastName.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				queryPatient = new Patient();
+				queryPatient.setLastName(txtLastName.getText());
+				foundPatients = getPatients(queryPatient);
+				table.clearAll();
+				table.setItemCount(0);
+				for (Patient patient : foundPatients)
+					// TODO: Use Table and a different toString method
+				{
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setData(patient);
+					item.setText(new String[] {patient.getFirstName(), 
+							patient.getLastName(), patient.getDOB().toString(), 
+							patient.getPhone()});
+				}
+			}
+		});
+		
+		// Medical number
+		Label lblPatientMedNumber = new Label(shell, SWT.NONE);
+		lblPatientMedNumber.setBounds(10, 91, 90, 20);
+		lblPatientMedNumber.setText("Medical Number");
+		txtMedicalNumber = new Text(shell, SWT.BORDER);
+		txtMedicalNumber.setBounds(104, 88, 336, 21);
+		txtMedicalNumber.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				queryPatient = new Patient();
+				queryPatient.setMedicalNumber(txtMedicalNumber.getText());
+				foundPatients = getPatients(queryPatient);
+				table.clearAll();
+				table.setItemCount(0);
+				for (Patient patient : foundPatients)
+					// TODO: Use Table and a different toString method
+				{
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setData(patient);
+					item.setText(new String[] {patient.getFirstName(), 
+							patient.getLastName(), patient.getDOB().toString(), 
+							patient.getPhone()});
+				}
+			}
+		});
+		
+		// BUTTON: View selected patient
+		Button btnView = new Button(shell, SWT.NONE);
+		btnView.setBounds(350, 323, 90, 30);
+		btnView.setText("View");
+		btnView.addSelectionListener(new SelectionAdapter()
+		{
+			public void widgetSelected(SelectionEvent e)
+			{
+				// TODO: need to convert from sel to Patient
+				TableItem item = table.getSelection()[0];
+				Patient patient = (Patient) item.getData();
+				showPatientInfo(shell, patient);
+			}
+		});
+		
+		Button btnCancel = new Button(shell, SWT.NONE);
+		btnCancel.setBounds(254, 323, 90, 30);
+		btnCancel.setText("Cancel");
+		
+		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setBounds(10, 129, 430, 172);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		TableColumn tblclmnFirstName = new TableColumn(table, SWT.NONE);
+		tblclmnFirstName.setWidth(100);
+		tblclmnFirstName.setText("First Name");
+		
+		TableColumn tblclmnLastName = new TableColumn(table, SWT.NONE);
+		tblclmnLastName.setWidth(100);
+		tblclmnLastName.setText("Last Name");
+		
+		TableColumn tblclmnDob = new TableColumn(table, SWT.NONE);
+		tblclmnDob.setWidth(100);
+		tblclmnDob.setText("DOB");
+		
+		TableColumn tblclmnPhoneNumber = new TableColumn(table, SWT.NONE);
+		tblclmnPhoneNumber.setWidth(100);
+		tblclmnPhoneNumber.setText("Phone Number");
+		
+		// A separator between the search fields
+		Label lblHonBarLeft = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lblHonBarLeft.setBounds(104, 64, 139, 21);
+		Label lblHonBarRight = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lblHonBarRight.setBounds(285, 62, 156, 21);
+		Label lblOr = new Label(shell, SWT.NONE);
+		lblOr.setAlignment(SWT.CENTER);
+		lblOr.setBounds(254, 68, 25, 14);
+		lblOr.setText("OR");
+		
+		btnCancel.addMouseListener(new MouseAdapter()
+		{
+			public void mouseDown(MouseEvent e)
+			{
+				// try to return to PatientConnect
+				shell.getParent().setVisible(true);
+				shell.close(); 
+			}
+		});
+		
+		// Actually open the shell
 		shell.open();
 		Display display = shell.getDisplay();
 		while (!shell.isDisposed())
@@ -56,138 +198,56 @@ public class ReturningPatientSearch
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		
-		shell.setSize(450, 385);
-		shell.setText("Returning Patient Search");
-		
-		// Name
-		Label lblName = new Label(shell, SWT.NONE);
-		lblName.setBounds(10, 38, 43, 20);
-		lblName.setText("Name");
-		txtFirstName = new Text(shell, SWT.BORDER);
-		txtFirstName.setToolTipText("First");
-		txtFirstName.setBounds(59, 35, 177, 21);
-		txtFirstName.addModifyListener(new ModifyListener()
-		{
-			public void modifyText(ModifyEvent e)
-			{
-			}
-		});
 
-		// ???????????????
-		StyledText resultBox = new StyledText(shell, SWT.BORDER);
-		resultBox.setBounds(10, 107, 412, 178);
-		
-		txtLastName = new Text(shell, SWT.BORDER);
-		txtLastName.setToolTipText("Last name");
-		txtLastName.setTouchEnabled(true);
-		txtLastName.setBounds(242, 35, 177, 21);
-		txtLastName.addModifyListener(new ModifyListener()
-		{
-			public void modifyText(ModifyEvent e)
-			{
-				if(txtLastName.getText().length() > 3)
-				{
-					searchPatient = new Patient();
-					result = getPatient(searchPatient);
-					for(Patient r: result)
-						resultBox.append(r.toSQLInsertString() + "\n");
-				}
-			}
-		});
-		
-		// Medical number
-		Label lblPatientMedNumber = new Label(shell, SWT.NONE);
-		lblPatientMedNumber.setBounds(10, 81, 64, 20);
-		lblPatientMedNumber.setText("Patient ID");
-		txtMedicalNumber = new Text(shell, SWT.BORDER);
-		txtMedicalNumber.setBounds(79, 78, 153, 21);
-		txtMedicalNumber.addModifyListener(new ModifyListener()
-		{
-			public void modifyText(ModifyEvent e)
-			{
-				/*if(txtFirst.getText().length() > 3){
-					search = new Patient(txtFirst.getText(), txtLast.getText(), txtID.getText());
-					result = controller.getPatient(search);
-					for(Patient r: result){
-						resultBox.append(r.toString() + "\n");
-					}
-					
-				}*/
-			}
-		});
-		
-		Button btnSearch = new Button(shell, SWT.NONE);
-		btnSearch.setBounds(338, 307, 90, 30);
-		btnSearch.setText("Search");
-		btnSearch.addMouseListener(new MouseAdapter()
-		{
-			public void mouseDown(MouseEvent e)
-			{
-				String sel = resultBox.getSelectionText();
-				Patient patient = new Patient();
-				//controller.setPatient(patient);
-				//controller.showPatientInfo(shell);
-			}
-		});
-		
-		Button btnCancel = new Button(shell, SWT.NONE);
-		btnCancel.setBounds(242, 307, 90, 30);
-		btnCancel.setText("Cancel");
-		btnCancel.addMouseListener(new MouseAdapter()
-		{
-			public void mouseDown(MouseEvent e)
-			{
-				shell.close(); // try to return to PatientConnect
-			}
-		});
 	}
 	
-	
-	/*
-	 * Returns list of patients from database
+
+	/**
+	 * Finds all patient records with give patient information.
+	 * @param patient Patient whose record is being searched.
+	 * @return List of patient records match the given information.
 	 */
-	public ArrayList<Patient> getPatient(Patient t)
+	public ArrayList<Patient> getPatients(Patient patient)
 	{
 		ArrayList<Patient> foundPatients = new ArrayList<Patient>();
 		
-		String sql = "SELECT * FROM Patients p WHERE ";
+		String sql = "SELECT * FROM Patients WHERE ";
 		
-		//If there is a first name
-		if (t.getFirstName().length() > 0)
+		// If there is a first name
+		if (patient.getFirstName().length() > 0)
 		{
-			sql += "p.pFirstName = '" + t.getFirstName() + "'";
+			sql += "pFirstName = '" + patient.getFirstName() + "'";
 			
 			//If theres a last name
-			if(t.getLastName().length() > 0)
-				sql += " and p.LastName = '" + t.getLastName() + "'";
+			if (patient.getLastName().length() > 0)
+				sql += " AND pLastName = '" + patient.getLastName() + "'";
 
 			//If theres a medical number
-			if(t.getMedicalNumber().length() > 0)
-				sql += " and p.pMedicalNumber = '" + t.getMedicalNumber() + "'";
+			if (patient.getMedicalNumber().length() > 0)
+				sql += " AND pMedicalNumber = '" + patient.getMedicalNumber() + "'";
 		}
 
-		//If there isnt a first but is a last
-		else if (t.getLastName().length() > 0)
+		// If there isn't a first but is a last
+		else if (patient.getLastName().length() > 0)
 		{
-			sql += "p.pLastName = '" + t.getLastName() + "'";
+			sql += "pLastName = '" + patient.getLastName() + "'";
 
 			//If theres a medical number
-			if(t.getMedicalNumber().length() > 0)
-				sql += " and p.pMedicalNumber = '" + t.getMedicalNumber() + "'";
+			if(patient.getMedicalNumber().length() > 0)
+				sql += " and pMedicalNumber = '" + patient.getMedicalNumber() + "'";
 			
 		}
 
-		//If theres only a medical number
-		else if (t.getMedicalNumber().length() > 0)
-			sql += "p.pMedicalNumber = '" + t.getMedicalNumber() + "'";
+		// If theres only a medical number
+		else if (patient.getMedicalNumber().length() > 0)
+			sql += "pMedicalNumber = '" + patient.getMedicalNumber() + "'";
 	
-		//System.out.println(sql);
+		System.out.println(sql);
 		
 		// Retrieve a record from the table Patients
 		try
 		{
-			Statement st = dbconnect.createStatement();
+			Statement st = RxManager.dbconnect.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 
 			while (rs.next()) // moving the cursor forward throu the rows
@@ -213,5 +273,10 @@ public class ReturningPatientSearch
 		}
 		
 		return foundPatients;
+	}
+	
+	public void showPatientInfo(Shell parent, Patient patient)
+	{
+		PatientInfo patientInfo = new PatientInfo(parent, patient);
 	}
 }
