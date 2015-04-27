@@ -2,8 +2,8 @@
 A group project for CECS 343 Software Engineering (CSULB, Spring 2015)
 
 ## Links
-[khaister.github.io/RxManager](http://khaister.github.io/RxManager)
-[Class documentation](http://khaister.github.io/RxManager/doc/)
+- [khaister.github.io/RxManager](http://khaister.github.io/RxManager)
+- [Class documentation](http://khaister.github.io/RxManager/doc/)
 
 ## Contributors
 This project is made possible by
