@@ -1,4 +1,4 @@
-package doctor.backend;
+package common;
 
 import java.sql.Date;
 
@@ -14,10 +14,12 @@ public class Prescription
 	private String route;
 	private String frequency;
 	private String quantity;
-	private int maxRefill;
+	private int maxRefills;
 	private int refills;
-	private String note;
-	private Date date;
+	private String notes;
+	private Date datePrescribed;
+	private Date dateFilled;
+	private Date datePickedUp;
 	private boolean isFilled;
 	private String pharmID;
 	private String docLicense;
@@ -29,7 +31,7 @@ public class Prescription
 	 */
 	public Prescription()
 	{
-		this("", "", "", "", "", 0, 0, "", null, false, "", "", "");
+		this("", "", "", "", "", 0, 0, "", null, null, null, false, "", "", "");
 	}
 	
 	/**
@@ -42,8 +44,10 @@ public class Prescription
 	 * @param quantity Quantity of the drug (pills, bottles, etc.)
 	 * @param maxRefills Maximum number of refills.
 	 * @param refills Number of refills done.
-	 * @param note Doctor or pharmacist's note.
-	 * @param date Date the prescription is written.
+	 * @param notes Doctor or pharmacist's note.
+	 * @param datePrescribed Date the prescription is written.
+	 * @param dateFilled Date the prescription is filled.
+	 * @param datePickedUp Date the prescription is picked up by patient.
 	 * @param filled True of the Rx has been filled, false otherwise.
 	 * @param pharmID Branch ID of the intended pharmacy.
 	 * @param docLicense License of the prescribing doctor.
@@ -51,18 +55,20 @@ public class Prescription
 	 */
     public Prescription(String name, String strength, String route,
     		String frequency, String quantity, int maxRefills, int refills,
-    		String note, Date date, boolean filled, String pharmID,
-    		String docLicense, String patientMedNumber)
+    		String notes, Date datePrescribed, Date dateFilled, Date datePickedUp,
+    		boolean filled, String pharmID, String docLicense, String patientMedNumber)
     {
     	this.name = name;
     	this.strength = strength;
     	this.route = route;
     	this.frequency = frequency;
     	this.quantity = quantity;
-    	this.maxRefill = maxRefills;
+    	this.maxRefills = maxRefills;
     	this.refills = refills;
-    	this.note = note;
-    	this.date = date;
+    	this.notes = notes;
+    	this.datePrescribed = datePrescribed;
+    	this.dateFilled = dateFilled;
+    	this.datePickedUp = datePickedUp;
     	this.isFilled = filled;
     	this.pharmID = pharmID;
     	this.docLicense = docLicense;
@@ -74,34 +80,34 @@ public class Prescription
 	//                          SETTERS / MUTATORS
 	//
 	////////////////////////////////////////////////////////////////////////////
-    public void setRxName(String name)
+    public void setName(String name)
     {
     	this.name = name;
     }
     
-    public void setRxStrength(String strength)
+    public void setStrength(String strength)
     {
     	this.strength = strength;
     }
     
-    public void setRxRoute(String route)
+    public void setRoute(String route)
     {
     	this.route = route;
     }
     
-    public void setRxFrequency(String frequency)
+    public void setFrequency(String frequency)
     {
     	this.frequency = frequency;
     }
     
-    public void setRxQuantity(String quantity)
+    public void setQuantity(String quantity)
     {
     	this.quantity = quantity;
     }
     
-    public void setRxMaxRefill(int maxRefill)
+    public void setMaxRefills(int maxRefills)
     {
-    	this.maxRefill = maxRefill;
+    	this.maxRefills = maxRefills;
     }
     
     public void setRefills(int refills)
@@ -109,27 +115,37 @@ public class Prescription
     	this.refills = refills;
     }
     
-    public void setRxNote(String note)
+    public void setNotes(String notes)
     {
-    	this.note = note;
+    	this.notes = notes;
     }
     
-    public void setRxDate(Date date)
+    public void setDatePrescribed(Date datePrescribed)
     {
-    	this.date = date;
+    	this.datePrescribed = datePrescribed;
     }
     
-    public void setRxIsFilled(boolean filled)
+    public void setDateFilled(Date dateFilled)
+    {
+    	this.dateFilled = dateFilled;
+    }
+    
+    public void setDatePickedUp(Date datePickedUp)
+    {
+    	this.datePickedUp = datePickedUp;
+    }
+    
+    public void setIsFilled(boolean filled)
     {
     	this.isFilled = filled;
     }
     
-    public void setRxPharmacyID(String pharmID)
+    public void setPharmacyID(String pharmID)
     {
     	this.pharmID = pharmID;
     }
     
-    public void setRxDocLicense(String docLicense)
+    public void setDocLicense(String docLicense)
     {
     	this.docLicense = docLicense;
     }
@@ -144,34 +160,34 @@ public class Prescription
 	//                          SETTERS / MUTATORS
 	//
 	////////////////////////////////////////////////////////////////////////////
-    public String getRxName()
+    public String getName()
     {
     	return this.name;
     }
     
-    public String getRxStrength()
+    public String getStrength()
     {
     	return this.strength;
     }
     
-    public String getRxRoute()
+    public String getRoute()
     {
     	return this.route;
     }
     
-    public String getRxFrequency()
+    public String getFrequency()
     {
     	return this.frequency;
     }
     
-    public String getRxQuantity()
+    public String getQuantity()
     {
     	return this.quantity;
     }
     
-    public int getRxMaxRefill()
+    public int getMaxRefills()
     {
-    	return this.maxRefill;
+    	return this.maxRefills;
     }
     
     public int getRefills()
@@ -179,14 +195,24 @@ public class Prescription
     	return this.refills;
     }
     
-    public String getRxNote()
+    public String getNote()
     {
-    	return this.note;
+    	return this.notes;
     }
     
-    public Date getRxDate()
+    public Date getDatePrescribed()
     {
-    	return this.date;
+    	return this.datePrescribed;
+    }
+    
+    public Date getDateFilled()
+    {
+    	return this.dateFilled;
+    }
+    
+    public Date getDatePickedUp()
+    {
+    	return this.datePickedUp;
     }
     
     public boolean IsFilled()
@@ -211,19 +237,51 @@ public class Prescription
     
     public String toSQLInsertString()
 	{
-		return "(\'" + this.name      + "\', " +  
-				"\'" + this.strength       + "\', " +
-				"\'" + this.route + "\', " +
-				"\'" + this.frequency          + "\', " +
-				"\'" + this.quantity        + "\', " +
-				"\'" + this.maxRefill           + "\', " +
-				"\'" + this.refills          + "\', " +
-				"\'" + this.note        + "\', " +
-				"\'" + this.date.toString()        + "\', " +
-				"\'" + this.isFilled        + "\', " +
-				"\'" + this.pharmID        + "\', " +
-				"\'" + this.docLicense        + "\', " +
-				"\'" + this.patientMedNumber  + "\') ";
+    	String datePrescribedString = "";
+    	if (this.datePrescribed != null) 
+    		datePrescribedString = "'" + this.datePrescribed.toString() + "', ";
+    	else
+    		datePrescribedString = "null, ";
+    	
+    	String dateFilledString = "";
+    	if (this.dateFilled != null) 
+    		dateFilledString = "'" + this.dateFilled.toString() + "', ";
+    	else
+    		dateFilledString = "null, ";
+    	int boolBit = 0;
+    	if (this.isFilled == true) boolBit = 1;
+    		
+		return "('" + this.name                      + "', " +  
+				"'" + this.strength                  + "', " +
+				"'" + this.route                     + "', " +
+				"'" + this.frequency                 + "', " +
+				"'" + this.quantity                  + "', " +
+				"" + this.maxRefills                + ", " +
+				"" + this.refills                   + ", " +
+				
+			          datePrescribedString +
+				  dateFilledString   +
+				"'" + this.notes                     + "', " +
+				"" + boolBit                  + ", " +
+				"'" + this.pharmID                   + "', " +
+				"'" + this.docLicense                + "', " +
+				"'" + this.patientMedNumber          + "') ";
 	}
     
+    public String toString()
+    {
+    	String rxInfo = "";
+    	rxInfo += "Name: " + getName() + ", " + getStrength() + "\n";
+		rxInfo += "Route: " + getRoute() + "\n";
+		rxInfo += getFrequency() + "\n";
+		rxInfo += getQuantity() + "\n";
+		rxInfo += "Refills: " + getMaxRefills() + "(done: " + getRefills() + ")\n";
+		rxInfo += "Precribed date: " + getDatePrescribed()==null ? "" : getDatePrescribed().toString() + "\n";
+		rxInfo += "Fill date: " + getDateFilled()==null ? "" : getDateFilled().toString() + "\n";
+		rxInfo += "Pick-up date: " + getDatePickedUp()==null ? "" : getDatePickedUp().toString() + "\n";
+		rxInfo += "Pharmacy ID: " + getPharmID() + "\n";
+		rxInfo += "Doc license: " + getDocLicense() + "\n";
+		rxInfo += "Patient med #: " + getPatientMedNumber();
+		return rxInfo;
+    }
 }
