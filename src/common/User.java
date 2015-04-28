@@ -130,6 +130,11 @@ public class User
 		return this.lastName;
 	}
 	
+	public String getFullName()
+	{
+		return this.firstName + " " + this.lastName;
+	}
+	
 	/**
 	 * Obtains user's medical license.
 	 * @return User's medical license.
