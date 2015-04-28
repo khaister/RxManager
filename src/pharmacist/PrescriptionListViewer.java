@@ -27,6 +27,7 @@ public class PrescriptionListViewer extends Window
 	private Text	txtFirstName;
 	private Text	txtLastName;
 	private Text	txtMedicalNumber;
+	private Patient queryPatient;
 
 	ArrayList<Triplet> records; // records for each row in the table
 
@@ -42,6 +43,18 @@ public class PrescriptionListViewer extends Window
 		parent.setVisible(false);
 		shell.setSize(896, 532);
 		shell.setText("Prescriptions");
+		records = new ArrayList<Triplet>();
+		
+		// Handle close event
+				shell.addListener(SWT.Close, new Listener()
+				{
+					public void handleEvent(Event e)
+					{
+						if (shell.getParent() != null)
+							shell.getParent().setVisible(true);
+						shell.dispose();
+					}
+				});
 
 		// TABLE: AVAILBLE RX
 		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
@@ -81,58 +94,24 @@ public class PrescriptionListViewer extends Window
 		tblclmnPatientDeliverypickUp.setWidth(158);
 		tblclmnPatientDeliverypickUp.setText("Patient Delivery/Pick up");
 		
-		this.displayRecords(table);
+		queryPatient = new Patient();
+		getRxs(queryPatient);
+		displayRecords(); // show all Rx's available on the database
 
-		// BUTTON: View previous rx
+		// BUTTON: View the selected Rx
 		Button btnView = new Button(shell, SWT.NONE);
-		
 		btnView.setBounds(811, 475, 75, 25);
 		btnView.setText("View");
-		// TODO: This button allows user to view previous Rx, one at a time
 		btnView.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
 			public void widgetSelected(SelectionEvent e) 
 			{
 				TableItem item = table.getSelection()[0];
-				showViewPrescription(shell, (Prescription) item.getData());
+				showViewPrescription(shell, ((Triplet) item.getData()).getPrescription());
 			}
 		});
 
-		// BUTTON: Refresh the list
-		Button btnRefresh = new Button(shell, SWT.NONE);
-		btnRefresh.setBounds(713, 475, 95, 25);
-		btnRefresh.setText("Refresh");
-		btnRefresh.addSelectionListener(new SelectionAdapter()
-		{
-			public void widgetSelected(SelectionEvent e)
-			{
-				table.clearAll();
-				table.setItemCount(0);
-				Patient p = new Patient();
-				p.setFirstName(txtFirstName.getText());
-				getRxs(new Patient());
-				for (Triplet tri : records)
-				{
-					TableItem item = new TableItem(table, SWT.NONE);
-					item.setData(tri);
-					Doctor d = tri.getDoctor(); 
-					Prescription r = tri.getPrescription();
-					p = tri.getPatient();
-		
-					item.setText(new String[]
-						{r.getDatePrescribed().toString(),
-						 p.getFullName(),
-						 d.getFullName(),
-						 r.getName(),
-						 r.getStrength(), 
-						 r.getQuantity(),
-						 r.getDateFilled() == null ? "" : r.getDateFilled().toString(),
-						 r.getDatePickedUp() == null ? "" : r.getDatePickedUp().toString()
-						 });
-				}
-			}
-		});
 		
 		// BUTTON: Cancel - Goes back to Patient connect?
 		Button btnCancel = new Button(shell, SWT.NONE);
@@ -153,19 +132,47 @@ public class PrescriptionListViewer extends Window
 		
 		txtFirstName = new Text(shell, SWT.BORDER);
 		txtFirstName.setBounds(10, 49, 374, 19);
+		txtFirstName.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				queryPatient = new Patient();
+				queryPatient.setFirstName(txtFirstName.getText());
+				getRxs(queryPatient);
+				displayRecords();
+			}
+		});
+		
 		txtLastName = new Text(shell, SWT.BORDER);
 		txtLastName.setBounds(390, 49, 403, 19);
+		txtLastName.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				queryPatient = new Patient();
+				queryPatient.setLastName(txtLastName.getText());
+				getRxs(queryPatient);
+				displayRecords();
+			}
+		});
 		
 		Label lblFilterByPatients = new Label(shell, SWT.NONE);
 		lblFilterByPatients.setBounds(10, 29, 455, 14);
-		lblFilterByPatients.setText("Filter by patient's name");
+		lblFilterByPatients.setText("Filter by patient's name");		
 		
-		Button btnRefine = new Button(shell, SWT.NONE);
-		btnRefine.setBounds(799, 45, 95, 28);
-		btnRefine.setText("Refine");
-		
-		
-		
+		// BUTTON: Refresh - update the list to view the most current Rx's
+		Button btnRefresh = new Button(shell, SWT.NONE);
+		btnRefresh.setBounds(710, 472, 95, 28);
+		btnRefresh.setText("Refresh");
+		btnRefresh.addSelectionListener(new SelectionAdapter()
+		{
+			public void widgetSelected(SelectionEvent e)
+			{
+				queryPatient = new Patient();
+				getRxs(queryPatient);
+				displayRecords();
+			}
+		});
 
 		// Actually open the shell
 		shell.open();
@@ -188,10 +195,31 @@ public class PrescriptionListViewer extends Window
 				+ "INNER JOIN Prescriptions r "
 					+ "ON d.dLicense = r.RxDocLicense "
 				+ "INNER JOIN Patients p "
-					+ "ON r.RxPatientMedNumber = p.pMedicalNumber"
-				+ "WHERE p.pMedicalNumber = '" + patient.getMedicalNumber() + "'";
+					+ "ON r.RxPatientMedNumber = p.pMedicalNumber";
 		
-		records = null; // clear the records before adding new ones as a result from the query
+		int firstNameIsEmpty = 0;
+		int lastNameIsEmpty = 0;
+		
+		if (patient != null)
+		{
+			firstNameIsEmpty = patient.getFirstName().compareToIgnoreCase("");
+			lastNameIsEmpty = patient.getLastName().compareToIgnoreCase("");
+		}
+		
+		if ( !(firstNameIsEmpty==0) || !(lastNameIsEmpty==0) )
+		{
+			 if ( !(firstNameIsEmpty==0) && (lastNameIsEmpty == 0) )
+				 sql += " WHERE p.pFirstName LIKE '%" + patient.getFirstName() + "%'";
+			 else if ( (firstNameIsEmpty==0) && !(lastNameIsEmpty==0))
+				 sql += " WHERE p.pLastName LIKE '%" + patient.getLastName() + "%'";
+			 else if ( !(firstNameIsEmpty==0) || !(lastNameIsEmpty==0) )
+				 sql += " WHERE p.pFirstName LIKE '%" + patient.getFirstName() 
+				 	 + "%' AND p.pLastName LIKE '%" + patient.getLastName() + "%'";
+		}
+		
+		System.out.println(sql);
+		
+		records.clear(); // clear the records before adding new ones as a result from the query
 		
 		try
 		{
@@ -200,6 +228,7 @@ public class PrescriptionListViewer extends Window
 
 			while (rs.next()) // moving the cursor forward throu the rows
 			{
+				
 				Doctor doctor = new Doctor();
 				doctor.setFirstName(rs.getString("dFirstName"));
 				doctor.setLastName(rs.getString("dLastName"));
@@ -233,6 +262,7 @@ public class PrescriptionListViewer extends Window
 				p.setZipCode(rs.getString("pZipCode"));
 				p.setMedicalNumber(rs.getString("pMedicalNumber"));
 				
+				//System.out.println("Found a record: " + doctor.toString() + ", " + patient.toString() + ", " + rx.toString());
 				Triplet aRow = new Triplet(doctor, rx, p);
 				records.add(aRow);
 			}
@@ -247,9 +277,40 @@ public class PrescriptionListViewer extends Window
 	}
 	
 	
-	public void displayRecords(Table table)
+	public void displayRecords()
 	{
+		table.clearAll();
+		table.setItemCount(0);
 		
+		for (Triplet tri : records)
+			// TODO: Use Table and a different toString method
+		{
+			TableItem item = new TableItem(table, SWT.NONE);
+			
+			item.setData(tri);
+			Patient patient = tri.getPatient();
+			Doctor prescriber = tri.getDoctor();
+			Prescription rx = tri.getPrescription();
+			
+			String dateFilledString = "";
+			if (rx.getDateFilled() != null)
+				dateFilledString = rx.getDateFilled().toString();
+			
+			String datePickedUpString = "";
+			if (rx.getDatePickedUp() != null)
+				datePickedUpString = rx.getDatePickedUp().toString();
+			
+			item.setText(new String[] {
+					rx.getDatePrescribed().toString(),
+					patient.getFullName(),
+					prescriber.getFullName(),
+					rx.getName(),
+					rx.getStrength(),
+					rx.getQuantity(),
+					dateFilledString,
+					datePickedUpString}
+					);
+		}
 	}
 	
 	/**

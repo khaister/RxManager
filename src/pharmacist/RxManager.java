@@ -47,10 +47,13 @@ public class RxManager extends Window
 	{
 		getConnection();
 		
-		Display display = new Display();
-		Shell rxman = new RxManager().open(display);
 		
-		while (!rxman.isDisposed())
+		
+		Display display = new Display();
+		RxManager rxman = new RxManager();
+		Shell rxmanShell = rxman.open(display);
+		
+		while (!rxmanShell.isDisposed())
 		{
 			if (!display.readAndDispatch())
 				display.sleep();
@@ -93,6 +96,15 @@ public class RxManager extends Window
 		
 		shell.setSize(450, 300);
 		shell.setText("Login - RxManager");
+		
+		// Handle close event
+		shell.addListener(SWT.Close, new Listener()
+		{
+			public void handleEvent(Event e)
+			{
+				shell.dispose();
+			}
+		});
 
 		// TEXT: Username
 		Label lblUsername = new Label(shell, SWT.NONE);
@@ -130,7 +142,8 @@ public class RxManager extends Window
 				if (correctCredential)
 				{
 					pharm = getPharmacistRecord(txtUsername.getText());
-					showPatientConnect(shell);
+					System.out.println("Pharmacist " + pharm.getFullName());
+					showRxListViewer(shell);
 				}
 				
 				// else show error msg
@@ -208,7 +221,7 @@ public class RxManager extends Window
 					rs.getString("phistLicense"),  
 					rs.getString("phistUsername"),
 					rs.getString("phistPassword"),
-					rs.getString("phistBranchID"));
+					rs.getString("phistPharmacyBranchID"));
 			
 		}
 		catch (SQLException e)
@@ -224,7 +237,7 @@ public class RxManager extends Window
 	 * Displays the PatientConnect Shell.
 	 * @param parent The parent Shell from which the PatientConnect Shell is called.
 	 */
-	public void showPatientConnect(Shell parent)
+	public void showRxListViewer(Shell parent)
 	{
 		PrescriptionListViewer rxListViewer = new PrescriptionListViewer(parent);
 	}
