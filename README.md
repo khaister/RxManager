@@ -1,12 +1,13 @@
 # RxManager
 A group project for CECS 343 Software Engineering (CSULB, Spring 2015)
 
-[khaister.github.io/RxManager](http://khaister.github.io/RxManager)
+## Links
+- [khaister.github.io/RxManager](http://khaister.github.io/RxManager)
+- [Class documentation](http://khaister.github.io/RxManager/doc/)
 
-[Class documentation](http://khaister.github.io/RxManager/doc/)
-
+## Contributors
 This project is made possible by
-* Anne Kobata
-* Brian Chan
-* Kevin Nguyen
-* Khai Nguyen
+* Khai Nguyen (coder, database design, git repository maintainer, javado)
+* Brian Chan (coder, database design)
+* Anne Kobata (GUI coder, database design)
+* Kevin Nguyen (documentation)
