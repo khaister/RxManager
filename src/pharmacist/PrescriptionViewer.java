@@ -34,25 +34,31 @@ public class PrescriptionViewer
 		shell.setSize(450, 548);
 		txtRx = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		txtRx.setBounds(10, 10, 430, 472);
-		String rxInfo = "";
-		rxInfo += "Name: " + rx.getName() + ", " + rx.getStrength() + "\n";
-		rxInfo += "Route: " + rx.getRoute() + "\n";
-		rxInfo += "Frequency: " + rx.getFrequency() + "\n";
-		rxInfo += "Quantity: " + rx.getQuantity() + "\n";
-		rxInfo += "Refills: " + rx.getRefills() + "/" + rx.getMaxRefills() + " (Refills/Max)\n";
-		rxInfo += "Precribed: " + rx.getDatePrescribed() + "\n";
-		rxInfo += "Fullfilled: " + rx.getDateFilled() + "\n";
-		rxInfo += "Pharmacy ID: " + rx.getPharmID() + "\n";
-		rxInfo += "Doctor license: " + rx.getDocLicense() + "\n";
-		rxInfo += "Patient medical number: " + rx.getPatientMedNumber();
-		txtRx.setText(rxInfo);
 		
+		// Handle close event
+				shell.addListener(SWT.Close, new Listener()
+				{
+					public void handleEvent(Event e)
+					{
+						if (shell.getParent() != null)
+							shell.getParent().setVisible(true);
+						shell.dispose();
+					}
+				});
+//		String rxInfo = "";
+//		rxInfo += "Name: " + rx.getName() + ", " + rx.getStrength() + "\n";
+//		rxInfo += "Route: " + rx.getRoute() + "\n";
+//		rxInfo += "Frequency: " + rx.getFrequency() + "\n";
+//		rxInfo += "Quantity: " + rx.getQuantity() + "\n";
+//		rxInfo += "Refills: " + rx.getRefills() + "/" + rx.getMaxRefills() + " (Refills/Max)\n";
+//		rxInfo += "Precribed: " + rx.getDatePrescribed() + "\n";
+//		rxInfo += "Fullfilled: " + rx.getDateFilled() + "\n";
+//		rxInfo += "Pharmacy ID: " + rx.getPharmID() + "\n";
+//		rxInfo += "Doctor license: " + rx.getDocLicense() + "\n";
+//		rxInfo += "Patient medical number: " + rx.getPatientMedNumber();
+		txtRx.setText(rx.toString());
 		
-		// BUTTON: Cancel - Goes back to AddPrescription
-		Button btnCancel = new Button(shell, SWT.NONE);
-		btnCancel.setBounds(244, 488, 95, 28);
-		btnCancel.setText("Close");
-		
+		// BUTTON Fill - marks Rx as filled
 		btnFill = new Button(shell, SWT.NONE);
 		btnFill.setBounds(345, 488, 95, 28);
 		btnFill.setText("Fill");
@@ -64,12 +70,28 @@ public class PrescriptionViewer
 			}
 		});
 		
+		// BUTTON: Pick up - marks Rx as picked up 
+		Button btnPickUp = new Button(shell, SWT.NONE);
+		btnPickUp.setBounds(244, 488, 95, 28);
+		btnPickUp.setText("Pick Up");
+		btnPickUp.addSelectionListener(new SelectionAdapter()
+		{
+			public void widgetSelected(SelectionEvent e)
+			{
+				markRxPickedUp(rx);
+			}
+		});
 		
+		// BUTTON: Cancel - Goes back to AddPrescription
+		Button btnCancel = new Button(shell, SWT.NONE);
+		btnCancel.setBounds(142, 488, 95, 28);
+		btnCancel.setText("Close");
 		btnCancel.addSelectionListener(new SelectionAdapter()
 		{
 			public void widgetSelected(SelectionEvent e)
 			{
-				//shell.getParent().setVisible(true);
+				if (shell.getParent() != null)
+					shell.getParent().setVisible(true);
 				shell.dispose();
 			}
 		});		
@@ -82,6 +104,11 @@ public class PrescriptionViewer
 				display.sleep();
 	}
 	
+	/**
+	 * Marks prescription as filled and assign the filled date to be the current
+	 * date.
+	 * @param rx Prescription to be filled.
+	 */
 	public void markRxFilled(Prescription rx)
 	{
 		String sql = "SELECT * FROM Prescriptions "
@@ -90,13 +117,47 @@ public class PrescriptionViewer
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManager.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs = st.executeQuery(sql);
 			
 			// This should return only 1 row.
 			while (rs.next())
 			{
-				rs.updateBoolean("RxDatePrescribed", true);
+				rs.updateBoolean("RxIsFilled", true);
+				rs.updateDate("RxDateFilled", java.sql.Date.valueOf(java.time.LocalDate.now()));
+				rs.updateRow();
+			}
+			
+			rs.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Marks prescription as "picked up" by assigning the pick-up date to be
+	 * the current date.
+	 * @param rx Prescription to be picked up.
+	 */
+	public void markRxPickedUp(Prescription rx)
+	{
+		String sql = "SELECT * FROM Prescriptions "
+				+ "WHERE RxDatePrescribed = '" + rx.getDatePrescribed() + "'"
+				+ "AND RxName = '" + rx.getName() + "'";
+		
+		try
+		{
+			Statement st = RxManager.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = st.executeQuery(sql);
+			
+			// This should return only 1 row.
+			while (rs.next())
+			{
+				rs.updateDate("RxDatePickedUp", java.sql.Date.valueOf(java.time.LocalDate.now()));
+				rs.updateRow();
 			}
 			
 			rs.close();
