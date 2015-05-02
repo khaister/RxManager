@@ -24,9 +24,9 @@ import static java.lang.System.out;
 public class RxManager extends Window
 {
 	// SQL Log in
-	private static String userName = "rxmandoc";
-	private static String password = "rxmandocpasswd";
-	private static String serverName = "localhost";
+	private static String userName = "lbcs";
+	private static String password = "rxmanager";
+	private static String serverName = "ec2-52-8-46-242.us-west-1.compute.amazonaws.com";
 	private static int portNumber = 3306;
 	private static String dbName = "rxmanagerdb";
 	public static Connection dbconnect;
