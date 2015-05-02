@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.*;
 
 import java.util.*;
 import java.sql.*;
-import java.util.regex.*;
 
 import common.*;
 import doctor.backend.*;
@@ -31,15 +30,7 @@ public class ReturningPatientSearch extends Window
 	private Text txtMedicalNumber;
 	private Table table;
 	
-	Pattern nameSplitter = Pattern.compile("\\w+\\s+\\w+"); // \w+\s+\w+
-	
-	// TESTING PURPOSES
-	public static void main(String[] args)
-	{
-		ReturningPatientSearch returnPatientSearch 
-			= new ReturningPatientSearch(new Shell(new Display()));
-	}
-	
+		
 	public ReturningPatientSearch(Shell parent) 
 	{
 		queryPatient = new Patient();
@@ -216,31 +207,31 @@ public class ReturningPatientSearch extends Window
 		// If there is a first name
 		if (patient.getFirstName().length() > 0)
 		{
-			sql += "pFirstName = '" + patient.getFirstName() + "'";
+			sql += "pFirstName LIKE '%" + patient.getFirstName() + "%'";
 			
 			//If theres a last name
 			if (patient.getLastName().length() > 0)
-				sql += " AND pLastName = '" + patient.getLastName() + "'";
+				sql += " AND pLastName LIKE '%" + patient.getLastName() + "%'";
 
 			//If theres a medical number
 			if (patient.getMedicalNumber().length() > 0)
-				sql += " AND pMedicalNumber = '" + patient.getMedicalNumber() + "'";
+				sql += " AND pMedicalNumber LIKE '%" + patient.getMedicalNumber() + "%'";
 		}
 
 		// If there isn't a first but is a last
 		else if (patient.getLastName().length() > 0)
 		{
-			sql += "pLastName = '" + patient.getLastName() + "'";
+			sql += "pLastName LIKE '%" + patient.getLastName() + "%'";
 
 			//If theres a medical number
 			if(patient.getMedicalNumber().length() > 0)
-				sql += " and pMedicalNumber = '" + patient.getMedicalNumber() + "'";
+				sql += " AND pMedicalNumber LIKE '%" + patient.getMedicalNumber() + "%'";
 			
 		}
 
 		// If theres only a medical number
 		else if (patient.getMedicalNumber().length() > 0)
-			sql += "pMedicalNumber = '" + patient.getMedicalNumber() + "'";
+			sql += "pMedicalNumber LIKE '%" + patient.getMedicalNumber() + "%'";
 	
 		System.out.println(sql);
 		
