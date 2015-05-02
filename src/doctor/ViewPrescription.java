@@ -5,7 +5,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.*;
 
-//import pharmacist.backend.Pharmacy;
+import common.*;
 import doctor.backend.*;
 
 /**
