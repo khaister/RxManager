@@ -17,11 +17,6 @@ public class PatientConnect extends Window
 {
 	private Shell shell;
 
-	// FOR TESTING PURPOSES
-	public static void main(String[] args)
-	{
-		PatientConnect patientConnect = new PatientConnect(new Shell(new Display()));
-	}
 	
 	/**
 	 * Create the shell.
@@ -31,6 +26,15 @@ public class PatientConnect extends Window
 	{
 		shell = new Shell(parent, SWT.CLOSE | SWT.BORDER | SWT.TITLE);
 		parent.setVisible(false);
+		
+		shell.addListener(SWT.Close, new Listener()
+		{
+			public void handleEvent(Event e)
+			{
+				shell.dispose();
+				shell.getParent().dispose();
+			}
+		});
 		
 		shell.setBounds(parent.getBounds().x, parent.getBounds().y, 450, 300);
 		

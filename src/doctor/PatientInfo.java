@@ -33,21 +33,6 @@ public class PatientInfo extends Window
 	private Text	txtPhone;
 	private Text	txtMedicalNumber;
 
-	// TESTING PURPOSES
-	public static void main(String[] args)
-	{
-		Patient pat = new Patient();
-		pat.setFirstName("Jane");
-		pat.setLastName("Doe");
-		pat.setDOB(new java.sql.Date(10000000));
-		pat.setAddress("123 Long Beach Blvd");
-		pat.setCity("Long Beach");
-		pat.setState("CA");
-		pat.setZipCode("90840");
-		pat.setPhone("7141234567");
-		pat.setMedicalNumber("P111111");
-		PatientInfo patInfo = new PatientInfo(new Shell(new Display()), pat);
-	}
 
 	/**
 	 * Create the shell.
@@ -206,6 +191,7 @@ public class PatientInfo extends Window
 
 		// BUTTON: Add new Rx
 		Button btnAddNewPrescription = new Button(shell, SWT.NONE);
+		btnAddNewPrescription.setToolTipText("Add new Rx");
 		btnAddNewPrescription.setBounds(747, 475, 139, 25);
 		btnAddNewPrescription.setText("Add Rx");
 		btnAddNewPrescription.addSelectionListener(new SelectionAdapter()
@@ -218,10 +204,9 @@ public class PatientInfo extends Window
 
 		// BUTTON: View previous rx
 		Button btnView = new Button(shell, SWT.NONE);
-		
-		btnView.setBounds(664, 475, 75, 25);
+		btnView.setToolTipText("View the selected Rx");
+		btnView.setBounds(666, 475, 75, 25);
 		btnView.setText("View");
-		// TODO: This button allows user to view previous Rx, one at a time
 		btnView.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
@@ -234,7 +219,8 @@ public class PatientInfo extends Window
 
 		// BUTTON: Cancel - Goes back to Patient connect?
 		Button btnCancel = new Button(shell, SWT.NONE);
-		btnCancel.setBounds(580, 475, 75, 25);
+		btnCancel.setToolTipText("Close this diaglog");
+		btnCancel.setBounds(585, 475, 75, 25);
 		btnCancel.setText("Cancel");
 		btnCancel.addSelectionListener(new SelectionAdapter()
 		{
@@ -246,6 +232,29 @@ public class PatientInfo extends Window
 				// each of which has PatientConnect as parent
 				shell.getParent().getParent().setVisible(true);
 				shell.dispose();
+			}
+		});
+		
+		Button btnRefresh = new Button(shell, SWT.NONE);
+		btnRefresh.setToolTipText("Refresh Rx list");
+		btnRefresh.setBounds(384, 475, 95, 28);
+		btnRefresh.setText("Refresh");
+		btnRefresh.addSelectionListener(new SelectionAdapter()
+		{
+			public void widgetSelected(SelectionEvent e)
+			{
+				ArrayList<Prescription> Rxs = getRxs(patient);
+				table.clearAll();
+				table.setItemCount(0);
+				for (Prescription rx : Rxs)
+				{
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setData(rx);
+					item.setText(new String[]
+						{rx.getName(), rx.getStrength(), rx.getQuantity(),
+						 rx.getDocLicense(), rx.getDatePrescribed().toString(), 
+						 rx.getDateFilled() == null ? "" : rx.getDateFilled().toString()});
+				}
 			}
 		});
 
@@ -280,9 +289,10 @@ public class PatientInfo extends Window
 				rx.setQuantity(rs.getString("RxQuantity"));
 				rx.setMaxRefills(rs.getInt("RxMaxRefills"));
 				rx.setRefills(rs.getInt("RxRefills"));
-				rx.setNotes(rs.getString("RxNote"));
+				rx.setNotes(rs.getString("RxNotes"));
 				rx.setDatePrescribed(rs.getDate("RxDatePrescribed"));
 				rx.setDateFilled(rs.getDate("RxDateFilled"));
+				rx.setDatePickedUp(rs.getDate("RxDatePickedUp"));
 				rx.setIsFilled(rs.getBoolean("RxIsFilled"));
 				rx.setPharmacyID(rs.getString("RxPharmacyID"));
 				rx.setDocLicense(rs.getString("RxDocLicense"));
