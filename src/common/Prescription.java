@@ -248,6 +248,13 @@ public class Prescription
     		dateFilledString = "'" + this.dateFilled.toString() + "', ";
     	else
     		dateFilledString = "null, ";
+    	
+    	String datePickedUpString = "";
+    	if (this.datePickedUp != null)
+    		datePickedUpString = "'" + this.datePickedUp.toString() + "', ";
+    	else
+    		datePickedUpString = "null, ";
+    	
     	int boolBit = 0;
     	if (this.isFilled == true) boolBit = 1;
     		
@@ -258,9 +265,9 @@ public class Prescription
 				"'" + this.quantity                  + "', " +
 				"" + this.maxRefills                + ", " +
 				"" + this.refills                   + ", " +
-				
-			          datePrescribedString +
-				  dateFilledString   +
+				     datePrescribedString +
+				     dateFilledString   +
+				     datePickedUpString +
 				"'" + this.notes                     + "', " +
 				"" + boolBit                  + ", " +
 				"'" + this.pharmID                   + "', " +
@@ -276,9 +283,9 @@ public class Prescription
 		rxInfo += getFrequency() + "\n";
 		rxInfo += getQuantity() + "\n";
 		rxInfo += "Refills: " + getMaxRefills() + "(done: " + getRefills() + ")\n";
-		rxInfo += "Precribed date: " + getDatePrescribed()==null ? "" : getDatePrescribed().toString() + "\n";
-		rxInfo += "Fill date: " + getDateFilled()==null ? "" : getDateFilled().toString() + "\n";
-		rxInfo += "Pick-up date: " + getDatePickedUp()==null ? "" : getDatePickedUp().toString() + "\n";
+		rxInfo += "Precribed date: " + (getDatePrescribed()==null ? "" : getDatePrescribed().toString()) + "\n";
+		rxInfo += "Fill date: " + (getDateFilled()==null ? "" : getDateFilled().toString()) + "\n";
+		rxInfo += "Pick-up date: " + (getDatePickedUp()==null ? "" : getDatePickedUp().toString()) + "\n";
 		rxInfo += "Pharmacy ID: " + getPharmID() + "\n";
 		rxInfo += "Doc license: " + getDocLicense() + "\n";
 		rxInfo += "Patient med #: " + getPatientMedNumber();
