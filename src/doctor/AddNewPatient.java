@@ -193,7 +193,7 @@ public class AddNewPatient extends Window
 
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerDoc.dbconnect.createStatement();
 			st.executeUpdate(sql);	
 		}
 		catch(SQLException e)

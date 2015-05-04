@@ -21,7 +21,7 @@ import static java.lang.System.out;
  * @author Khai Nguyen
  */
 @SuppressWarnings("unused")
-public class RxManager extends Window
+public class RxManagerDoc extends Window
 {
 	// SQL Log in
 	private static String userName = "lbcs";
@@ -48,7 +48,7 @@ public class RxManager extends Window
 		getConnection();
 		
 		Display display = new Display();
-		Shell rxman = new RxManager().open(display);
+		Shell rxman = new RxManagerDoc().open(display);
 		
 		while (!rxman.isDisposed())
 		{

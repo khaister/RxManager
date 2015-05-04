@@ -85,8 +85,8 @@ public class PrescriptionConfirm extends Window
 		txtDoctor = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		txtDoctor.setBounds(221, 329, 219, 56);
 		String docInfo = "";
-		docInfo += RxManager.doctor.getFirstName() + " " + RxManager.doctor.getLastName() + "\n";
-		docInfo += RxManager.doctor.getLicense();
+		docInfo += RxManagerDoc.doctor.getFullName() + "\n";
+		docInfo += RxManagerDoc.doctor.getLicense();
 		txtDoctor.setText(docInfo);
 		
 
@@ -158,7 +158,7 @@ public class PrescriptionConfirm extends Window
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerDoc.dbconnect.createStatement();
 			st.executeUpdate(sql);
 			//rs.close();
 		}

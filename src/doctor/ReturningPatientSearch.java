@@ -238,7 +238,7 @@ public class ReturningPatientSearch extends Window
 		// Retrieve a record from the table Patients
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerDoc.dbconnect.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 
 			while (rs.next()) // moving the cursor forward throu the rows

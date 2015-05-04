@@ -276,7 +276,7 @@ public class PatientInfo extends Window
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerDoc.dbconnect.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 
 			while (rs.next()) // moving the cursor forward throu the rows

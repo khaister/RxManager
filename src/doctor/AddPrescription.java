@@ -145,7 +145,7 @@ public class AddPrescription extends Window
 				rx.setDateFilled(null);
 				rx.setIsFilled(false);
 				rx.setPharmacyID(pharm.getBranchID());
-				rx.setDocLicense(RxManager.doctor.getLicense());
+				rx.setDocLicense(RxManagerDoc.doctor.getLicense());
 				rx.setPatientMedNumber(patient.getMedicalNumber());
 				
 				
@@ -189,7 +189,7 @@ public class AddPrescription extends Window
 		String sql = "SELECT * FROM Pharmacies";
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerDoc.dbconnect.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 			while (rs.next()) // moving the cursor forward throu the rows
 			{
