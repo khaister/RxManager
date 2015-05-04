@@ -3,6 +3,7 @@ package pharmacist;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.*; 
+import org.eclipse.swt.layout.*;
 
 import java.sql.*;
 import java.util.Properties;
@@ -21,12 +22,12 @@ import static java.lang.System.out;
  * @author Khai Nguyen
  */
 @SuppressWarnings("unused")
-public class RxManager extends Window
+public class RxManagerPharm extends Window
 {
 	// SQL Log in
-	private static String userName = "rxmanpharm";
-	private static String password = "rxmanpharmpasswd";
-	private static String serverName = "localhost";
+	private static String userName = "lbcs";
+	private static String password = "rxmanager";
+	private static String serverName = "ec2-52-8-46-242.us-west-1.compute.amazonaws.com";
 	private static int portNumber = 3306;
 	private static String dbName = "rxmanagerdb";
 	public static Connection dbconnect;
@@ -50,7 +51,7 @@ public class RxManager extends Window
 		
 		
 		Display display = new Display();
-		RxManager rxman = new RxManager();
+		RxManagerPharm rxman = new RxManagerPharm();
 		Shell rxmanShell = rxman.open(display);
 		
 		while (!rxmanShell.isDisposed())

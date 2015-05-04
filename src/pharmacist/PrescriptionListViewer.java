@@ -223,7 +223,7 @@ public class PrescriptionListViewer extends Window
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement();
+			Statement st = RxManagerPharm.dbconnect.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 
 			while (rs.next()) // moving the cursor forward throu the rows
@@ -243,7 +243,7 @@ public class PrescriptionListViewer extends Window
 				rx.setQuantity(rs.getString("RxQuantity"));
 				rx.setMaxRefills(rs.getInt("RxMaxRefills"));
 				rx.setRefills(rs.getInt("RxRefills"));
-				rx.setNotes(rs.getString("RxNote"));
+				rx.setNotes(rs.getString("RxNotes"));
 				rx.setDatePrescribed(rs.getDate("RxDatePrescribed"));
 				rx.setDateFilled(rs.getDate("RxDateFilled"));
 				rx.setDatePickedUp(rs.getDate("RxDatePickedUp"));

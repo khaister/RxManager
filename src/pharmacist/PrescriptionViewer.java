@@ -117,7 +117,7 @@ public class PrescriptionViewer
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			Statement st = RxManagerPharm.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs = st.executeQuery(sql);
 			
 			// This should return only 1 row.
@@ -150,7 +150,7 @@ public class PrescriptionViewer
 		
 		try
 		{
-			Statement st = RxManager.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			Statement st = RxManagerPharm.dbconnect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs = st.executeQuery(sql);
 			
 			// This should return only 1 row.
