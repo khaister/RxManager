@@ -7,7 +7,7 @@ A group project for CECS 343 Software Engineering (CSULB, Spring 2015)
 
 ## Contributors
 This project is made possible by
-* Khai Nguyen (coder, database design, git repository maintainer, javado)
+* Khai Nguyen (coder, database design, git repository maintainer, javadoc)
 * Brian Chan (coder, database design)
 * Anne Kobata (GUI coder, database design)
 * Kevin Nguyen (documentation)
