@@ -1,0 +1,8 @@
+title: Rxmanager
+description: A group project for CECS 343 Software Engineering (CSULB, Spring 2015)
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
